@@ -10,11 +10,14 @@ phases:
       - #aws s3 sync s3://raw-source s3://sync-destination --delete
       - echo ${SPECIFIC_FOLDER}
       - |
-        if [[ ${SPECIFIC_FOLDER} -eq 0 ]]; then
-        echo "Param empty"
+        #!/bin/bash
+        if [[ " ${SPECIFIC_FOLDER[*]} " == *"test"* ]]; then
+          # Iterate only through BRANCH_NAME directory
+          echo "test param"
         else
-        echo "Param is ${SPECIFIC_FOLDER}"
-       - echo "Tested"
+          # Iterate through both dev and prod directories
+          echo "not test"
+        fi
   post_build:
     commands:
       - echo Build completed on `date`
