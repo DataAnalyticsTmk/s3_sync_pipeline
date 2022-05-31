@@ -7,7 +7,14 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - aws s3 sync s3://raw-source s3://sync-destination --delete
+      - #aws s3 sync s3://raw-source s3://sync-destination --delete
+      - echo ${SPECIFIC_FOLDER}
+      -|
+        if [[ ${SPECIFIC_FOLDER} -eq 0 ]]; then
+        echo "Param empty"
+        else
+        echo "Param is ${SPECIFIC_FOLDER}"
+        fi
   post_build:
     commands:
       - echo Build completed on `date`
