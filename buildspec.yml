@@ -7,6 +7,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - aws s3 ls
   post_build:
     commands:
       - echo Build completed on `date`
