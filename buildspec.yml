@@ -11,12 +11,12 @@ phases:
       - echo ${SPECIFIC_FOLDER}
       - |
         #!/bin/bash
-        if [[ " ${SPECIFIC_FOLDER[*]} " == *"test"* ]]; then
+        if [ -z "$SPECIFIC_FOLDER" ]; then
           # Iterate only through BRANCH_NAME directory
-          echo "test param"
+          echo "Param empty"
         else
           # Iterate through both dev and prod directories
-          echo "not test"
+          echo "Param exists $SPECIFIC_FOLDER"
         fi
   post_build:
     commands:
