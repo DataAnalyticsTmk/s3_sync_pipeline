@@ -7,16 +7,18 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - #aws s3 sync s3://raw-source s3://sync-destination --delete
+      - #
       - echo ${SPECIFIC_FOLDER}
       - |
         #!/bin/bash
-        if [ -z "$SPECIFIC_FOLDER" ]; then
+        if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
           # Iterate only through BRANCH_NAME directory
-          echo "Param empty"
+          echo "Starting full s3 sync..."
+          aws s3 sync s3://raw-source s3://sync-destination --delete
         else
           # Iterate through both dev and prod directories
-          echo "Param exists $SPECIFIC_FOLDER"
+          echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
+          aws s3 sync s3://raw-source s3://sync-destination --delete --exclude '*' --include '$SPECIFIC_FOLDER_PATH'
         fi
   post_build:
     commands:
