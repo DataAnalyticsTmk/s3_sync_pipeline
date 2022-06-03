@@ -25,12 +25,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Configure AWS credentials from Production account
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::970892252496:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_SSO-PS-AWS-DataEngineerGrp_75fcd8b4f57d2a7f
-        aws-region: us-east-1
-
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     - name: Copy files to the production website with the AWS CLI
       run: |
         echo "Test"
