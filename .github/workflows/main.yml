@@ -32,4 +32,4 @@ jobs:
         AWS_DEFAULT_OUTPUT: json
     - name: Copy files to the production website with the AWS CLI
       run: |
-        echo "Test"
+        aws s3 ls
