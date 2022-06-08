@@ -12,13 +12,12 @@ phases:
       - |
         #!/bin/bash
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
-          # Iterate only through BRANCH_NAME directory
           echo "Starting full s3 sync..."
-          aws s3 sync s3://raw-source s3://sync-destination --delete
+          #aws s3 sync s3://raw-source s3://sync-destination --delete
         else
-          # Iterate through both dev and prod directories
           echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
-          aws s3 sync s3://raw-source s3://sync-destination --delete --exclude '*' --include '$SPECIFIC_FOLDER_PATH'
+          #aws s3 sync s3://raw-source s3://sync-destination --delete --exclude '*' --include '$SPECIFIC_FOLDER_PATH'
+          aws s3 ls
         fi
   post_build:
     commands:
