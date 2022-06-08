@@ -13,7 +13,8 @@ phases:
         #!/bin/bash
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
           echo "Starting full s3 sync..."
-          #aws s3 sync s3://raw-source s3://sync-destination --delete
+          #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/ s3://sync-destination --delete
+          aws s3 ls s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw
         else
           echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
           #aws s3 sync s3://raw-source s3://sync-destination --delete --exclude '*' --include '$SPECIFIC_FOLDER_PATH'
