@@ -12,25 +12,42 @@ phases:
       - |
         #!/bin/bash
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
-          echo "Starting full s3 sync..."
-          aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/sales_order/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/sales_order/ --delete
-             queryExecutionId=$(aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE standardized_sales_order_detail" --query-execution-context Database=publish_sync_test --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries | jq -r '.QueryExecutionId')
-             echo "queryExecutionId was ${queryExecutionId}"
-                for i in $(seq 1 750); do
-            queryState=$(aws athena get-query-execution --query-execution-id "${queryExecutionId}"  --region us-east-1 | jq -r ".QueryExecution.Status.State");
-                if [[ "${queryState}" == "SUCCEEDED" ]]; then
-                break;
-                fi;
-                echo "Awaiting queryExecutionId ${queryExecutionId} - state was ${queryState}"
-                if [[ "${queryState}" == "FAILED" ]]; then
-            # exit with "bad" error code
-                        exit 1;
-                fi;
-                    sleep 2
-                done
+          TABLES_LIST=$(cat sync_list.json|jq -r '.[]'|xargs)
+          echo $TABLES_LIST
+              for table in $TABLES_LIST
+              do
+              echo "Starting msck for ${table}"
+              queryExecutionId=$(aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $table" --query-execution-context Database=${DATABASE} --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries | jq -r '.QueryExecutionId')
+              echo "queryExecutionId was ${queryExecutionId}"
+              for i in $(seq 1 60); do
+          queryState=$(aws athena get-query-execution --query-execution-id "${queryExecutionId}"  --region us-east-1 | jq -r ".QueryExecution.Status.State");
+              if [[ "${queryState}" == "SUCCEEDED" ]]; then
+              break;
+              fi;
+              echo "Awaiting queryExecutionId ${queryExecutionId} - state was ${queryState}"
+              if [[ "${queryState}" == "FAILED" ]]; then
+          # exit with "bad" error code
+                      exit 1;
+              fi;
+                  sleep 2
+              done
+          done
         else
-          echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
-          #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${SPECIFIC_FOLDER_PATH} s3://dev-dl-970892252496-us-east-1-conformed/sync_test/${SPECIFIC_FOLDER_PATH} --delete
+          echo "Starting msck for only provided table $SPECIFIC_TABLE"
+            queryExecutionId=$(aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $SPECIFIC_TABLE" --query-execution-context Database=publish_sync_test --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries | jq -r '.QueryExecutionId')
+            echo "queryExecutionId was ${queryExecutionId}"
+            for i in $(seq 1 60); do
+            queryState=$(aws athena get-query-execution --query-execution-id "${queryExecutionId}"  --region us-east-1 | jq -r ".QueryExecution.Status.State");
+            if [[ "${queryState}" == "SUCCEEDED" ]]; then
+            break;
+            fi;
+            echo "Awaiting queryExecutionId ${queryExecutionId} - state was ${queryState}"
+            if [[ "${queryState}" == "FAILED" ]]; then
+            # exit with "bad" error code
+                    exit 1;
+            fi;
+                sleep 2
+            done
         fi
   post_build:
     commands:
