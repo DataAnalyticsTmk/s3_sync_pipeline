@@ -18,6 +18,7 @@ phases:
           for div in $TEST
           do
           echo "testing:$div"
+          wchich jq
           done
           else
           echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
