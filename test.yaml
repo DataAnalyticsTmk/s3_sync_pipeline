@@ -14,7 +14,7 @@ phases:
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
           echo "Starting full s3 sync..."
           aws s3 cp s3://aws-glue-assets-970892252496-us-east-1/codebuild/sync_list.json .
-          LIST=$(cat sync_list.json|jq -r '.[]'| xargs)
+          LIST=$(cat sync_list.json|jq -r 'keys[]'| xargs)
             for div in $LIST
             do
             echo "Starting sync for ${div}"
@@ -28,10 +28,11 @@ phases:
     commands:
       - echo Build completed on `date`
       - |
-        LIST=$(cat sync_list.json|jq -r '.[]'| xargs)
-        for div in $LIST
+        TABLES_LIST=$(cat sync_list.json|jq -r '.[]'| xargs)
+        for table in $TABLES_LIST
         do
-        TABLE=$(cat sync_list.json| jq -r '.${div}')
         echo "Starting msck for $div:${TABLE}"
-        #aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $TABLE" --query-execution-context Database=publish_sync_test --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries
+        #aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $table" --query-execution-context Database=publish_sync_test --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries
         done
+
+  
