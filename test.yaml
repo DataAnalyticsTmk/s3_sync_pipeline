@@ -13,7 +13,7 @@ phases:
         #!/bin/bash
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
           echo "Starting full s3 sync..."
-          aws s3 cp s3://aws-glue-assets-970892252496-us-east-1/codebuild/sync_list.txt .
+          aws s3 cp s3://aws-glue-assets-970892252496-us-east-1/codebuild/sync_list.json .
           LIST=$(cat sync_list.json|jq -r '.[]'| xargs)
             for div in $LIST
             do
