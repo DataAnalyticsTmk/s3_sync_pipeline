@@ -7,11 +7,9 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - #
-      - echo ${SPECIFIC_FOLDER}
       - |
         #!/bin/bash
-        if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
+        if [ -z "$SPECIFIC_TABLE" ]; then
           TABLES_LIST=$(cat sync_list.json|jq -r '.[]'|xargs)
           echo $TABLES_LIST
               for table in $TABLES_LIST
