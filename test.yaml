@@ -24,7 +24,7 @@ phases:
            echo $TABLES_LIST
              for table in $TABLES_LIST
              do
-             echo "Starting msck for $div:${TABLE}"
+             echo "Starting msck for ${table}"
              #aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $table" --query-execution-context Database=publish_sync_test --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries
              done
         else
