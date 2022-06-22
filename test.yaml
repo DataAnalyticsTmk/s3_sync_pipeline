@@ -29,7 +29,7 @@ phases:
       - echo Build completed on `date`
       - |
         cat sync_list.json|jq -r '.[]'|xargs
-        TABLES_LIST=$(cat sync_list.json|jq -r '.[]'|xargs)
+        TABLES_LIST=`cat sync_list.json|jq -r '.[]'|xargs`
         for table in $TABLES_LIST
         do
         echo "Starting msck for $div:${TABLE}"
