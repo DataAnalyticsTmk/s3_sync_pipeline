@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Nothing to do in the pre_build phase...
+  build:
+    commands:
+      - echo Build started on `date`
+      - #
+      - echo ${SPECIFIC_FOLDER}
+      - |
+        #!/bin/bash
+        if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
+          echo "Starting full s3 sync..."
+          aws s3 cp s3://aws-glue-assets-970892252496-us-east-1/codebuild/sync_list.txt .
+          TEST=$(cat sync_list.txt| xargs)
+          echo "Test:$TEST"
+          else
+          echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
+          #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/ --delete --exclude '*' --include '$SPECIFIC_FOLDER_PATH'
+        fi
+  post_build:
+    commands:
+      - echo Build completed on `date`
+  
