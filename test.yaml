@@ -18,7 +18,7 @@ phases:
             for div in $LIST
             do
             echo "Starting sync for ${div}"
-            aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${div}/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/${div}/ --delete
+            #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${div}/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/${div}/ --delete
             done
            TABLES_LIST=$(cat sync_list.json|jq -r '.[]'|xargs)
            echo $TABLES_LIST
