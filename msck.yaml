@@ -10,6 +10,7 @@ phases:
       - |
         #!/bin/bash
         if [ -z "$SPECIFIC_TABLE" ]; then
+          aws s3 cp s3://aws-glue-assets-970892252496-us-east-1/codebuild/sync_list.json .
           TABLES_LIST=$(cat sync_list.json|jq -r '.[]'|xargs)
           echo $TABLES_LIST
               for table in $TABLES_LIST
