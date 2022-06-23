@@ -16,7 +16,7 @@ phases:
               for table in $TABLES_LIST
               do
               echo "Starting msck for ${table}"
-              queryExecutionId=$(aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $table" --query-execution-context Database=${DATABASE} --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries | jq -r '.QueryExecutionId')
+              queryExecutionId=$(aws athena --region us-east-1 start-query-execution --query-string "MSCK REPAIR TABLE $table" --query-execution-context Database=${table} --result-configuration OutputLocation=s3://dev-dl-970892252496-us-east-1-queries | jq -r '.QueryExecutionId')
               echo "queryExecutionId was ${queryExecutionId}"
               for i in $(seq 1 60); do
           queryState=$(aws athena get-query-execution --query-execution-id "${queryExecutionId}"  --region us-east-1 | jq -r ".QueryExecution.Status.State");
