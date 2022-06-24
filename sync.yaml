@@ -7,8 +7,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - #
-      - echo ${SPECIFIC_FOLDER}
+      - echo ${SPECIFIC_FOLDER_PATH}
       - |
         #!/bin/bash
         if [ -z "$SPECIFIC_FOLDER_PATH" ]; then
@@ -18,14 +17,12 @@ phases:
             for div in $LIST
             do
             echo "Starting sync for ${div}"
-            #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${div}/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/${div}/ --delete
+            aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${div}/ s3://dev-dl-970892252496-us-east-1-conformed/published/${div}/ --delete
             done
         else
           echo "Starting sync for only provided s3 folder path $SPECIFIC_FOLDER_PATH"
-          #aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${SPECIFIC_FOLDER_PATH}/ s3://dev-dl-970892252496-us-east-1-conformed/sync_test/${SPECIFIC_FOLDER_PATH}/ --delete
+          aws s3 sync s3://dev-dl-970892252496-us-east-1-raw/consolidated_raw/${SPECIFIC_FOLDER_PATH}/ s3://dev-dl-970892252496-us-east-1-conformed/published/${SPECIFIC_FOLDER_PATH}/ --delete
         fi
   post_build:
     commands:
       - echo Build completed on `date`
-
-  
